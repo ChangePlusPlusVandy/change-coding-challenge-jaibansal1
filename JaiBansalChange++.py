@@ -16,10 +16,10 @@ import random
 #security purposes
 
 twitter_keys = {
-        'consumer_key':        'ZXJckXpHjBMzf23PueOItzcJQ',
-        'consumer_secret':     'Xn4GrCXNv6SpejkOxkvJMQqyADz0kixpGMp8R466JdMkkMMvSo',
-        'access_token_key':    '1198131685533134848-FocZJowvgmEloWa9aTYDGhHM6L7OiN',
-        'access_token_secret': 'muCodPpPLF3ufKvsccBJXeVeUk2MWWjjaOtMW7N0cCqPV'
+        'consumer_key':        'nuXn0yXPGggrmT0tKH7uPWiIi',
+        'consumer_secret':     '4eT91FDJXZSQPrIa0UmTWNsd71kXg5It9yG0VCYwg4tZjiFQFF',
+        'access_token_key':    '1198131685533134848-YNHqDsi22any1b29Z1uYyDBNM3hDp8',
+        'access_token_secret': 'PZugPk20RGzeQjFLg9FcY1lSCd7EKVkKwUV4kXD4K1tel'
     }
 
 #set up tweepy
@@ -27,58 +27,68 @@ auth = tweepy.OAuthHandler(twitter_keys['consumer_key'], twitter_keys['consumer_
 auth.set_access_token(twitter_keys['access_token_key'], twitter_keys['access_token_secret'])
 api = tweepy.API(auth)
 
+
+
+#change these variables to make the program work with whoever you want
+celeb1_name = 'Elon Musk'
+celeb2_name = 'Kanye West'
+
+celeb1_twitter = '@elonmusk'
+celeb2_twitter = '@kanyewest'
+
 #find elon/kanye last 3200 tweets
-#just change the first argument of the api call here to play with anyone you want
-elon_tweets = api.user_timeline('@elonmusk', count = 3200)
-kanye_tweets = api.user_timeline('@kanyewest', count = 3200)
+
+celeb1_tweets = api.user_timeline(celeb1_twitter, count = 3200)
+celeb2_tweets = api.user_timeline(celeb2_twitter, count = 3200)
 
 
 #create arrays for kanye and elon's tweets that are cleaned per specs
-elon_array= []
-for tweet in elon_tweets:
+celeb1_array= []
+for tweet in celeb1_tweets:
     if not '@' in tweet.text:
         if not 'https' in tweet.text:
-            elon_array.append(tweet.text)
+            celeb1_array.append(tweet.text)
         
-kanye_array= []
-for tweet in kanye_tweets:
+celeb2_array= []
+for tweet in celeb2_tweets:
     if not '@' in tweet.text:
         if not 'https' in tweet.text:
-            kanye_array.append(tweet.text)
+          celeb2_array.append(tweet.text)
 
 
 #length of both arrays (used for random tweet generation later)
-elon_length = len(elon_array)
-kanye_length = len(kanye_array)
+celeb1_length = len(celeb1_array)
+celeb2_length = len(celeb2_array)
 
 #game starts
-print('Welcome to the Kanye Elon Twitter Guessing Game!')
+print('Welcome to the',celeb1_name, 'and',celeb2_name,' Twitter Guessing Game!')
 print('\n')
 
+
 #change num_iterations to change how many times you want to play the game
-num_iterations = 3
+num_iterations = 5
 count = 0
 num_correct_answers = 0
 
 #game
 while count < num_iterations:
-    rand = random.randint(0,1) #decide which celeb tweet gets used
-    if rand == 0:
-        correct_answer = 'Elon Musk'
-        rand2 = random.randint(0,elon_length -1)
-        rand_tweet = elon_array[rand2]
+    rand = random.randint(1,2) #decide which celeb tweet gets used
     if rand == 1:
-        correct_answer = 'Kanye West'
-        rand2 = random.randint(0,kanye_length -1)
-        rand_tweet = kanye_array[rand2]
+        correct_answer = celeb1_name
+        rand2 = random.randint(0,celeb1_length -1)
+        rand_tweet = celeb1_array[rand2]
+    if rand == 2:
+        correct_answer = celeb2_name
+        rand2 = random.randint(0,celeb2_length -1)
+        rand_tweet = celeb2_array[rand2]
     print(rand_tweet)
     print('\n')
-    user_answer = input('Is this tweet from Elon Musk or Kanye West? ')
+    user_answer = input('Is this tweet from ' + celeb1_name + ' or ' + celeb2_name + '? ')
     print('\n')
     #program will not catch typos (could be fixed in later implementation)
     if user_answer.lower() == correct_answer.lower(): #case insensitive
         num_correct_answers = num_correct_answers + 1
     count = count +1
 
-
+#could add play again option in later implementation, didn't think necessary
 print('You got ', num_correct_answers, 'out of' , num_iterations ,' correct! Thanks for playing!')
